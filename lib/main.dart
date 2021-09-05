@@ -13,7 +13,7 @@ final redirectUri = Uri(
   host: currentUri.host,
   scheme: currentUri.scheme,
   port: currentUri.port,
-  path: '/',
+  path: currentUri.path,
 );
 
 final authUrl =
