@@ -207,8 +207,7 @@ class _CollectionGeneratorState extends State<CollectionGenerator> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.add),
+                  TextButton(
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -234,7 +233,7 @@ class _CollectionGeneratorState extends State<CollectionGenerator> {
                           },
                         ),
                       );
-                    },
+                    }, child: Text('Select some metrics'),
                   ),
 
                   Flexible(child: ChipWidget()),
