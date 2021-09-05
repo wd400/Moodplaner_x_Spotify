@@ -113,7 +113,6 @@ List tracksToList(List tracks, int begin, int end) {
 Future<bool> saveInPlaylist(
     String token, String playlistId, List playlist) async {
   print("in saveInPlaylist");
-  print('tosave length ' + playlist.length.toString());
   for (int i = 0; i < playlist.length; i += 100) {
     var url = "https://api.spotify.com/v1/playlists/$playlistId/tracks";
     print(url);
@@ -135,17 +134,18 @@ Future<bool> saveInPlaylist(
   return true;
 }
 
-void savePlaylist(String token, List playlist) async {
+Future<bool> savePlaylist(String token, List playlist) async {
   String? userId = await getCurrentUserId(token);
   if (userId == null) {
-    return;
+    return  false;
   }
   String name = "New Moodplaner playlist";
   String? playlistId = await buildNewPlaylist(token, userId, name);
   if (playlistId == null) {
-    return;
+    return false;
   }
-  saveInPlaylist(token, playlistId, playlist);
+ return  saveInPlaylist(token, playlistId, playlist);
+
 
   //create new playlist
   //add with loop

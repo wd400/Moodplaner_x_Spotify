@@ -6,6 +6,7 @@ import 'dart:html';
 import 'editGenerator.dart';
 import 'list_generated_playlist.dart';
 import 'list_playlists.dart';
+import 'package:snack/snack.dart';
 
 final currentUri = Uri.base;
 
@@ -63,6 +64,9 @@ class _MyHomePageState extends State<MyHomePage> {
             .substring('access_token='.length));
   }
 
+  final saved = SnackBar(content: Text('Playlist saved on Spotify!'));
+  final failed = SnackBar(content: Text('Failed to save playlist on Spotify!'));
+
   @override
   void initState() {
     super.initState();
@@ -91,7 +95,15 @@ class _MyHomePageState extends State<MyHomePage> {
       IconButton(
           onPressed: () {
             savePlaylist(context.read(tokenProvider).token!,
-                context.read(generatedPlaylistProvider).value);
+                context.read(generatedPlaylistProvider).value).then((value) {
+if (value) {
+
+  saved.show(context);
+} else {
+  failed.show(context);
+}
+
+            });
           },
           icon: Icon(Icons.save))
     ]);
