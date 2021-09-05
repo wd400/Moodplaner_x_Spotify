@@ -11,5 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2 # Only works with v2
       - uses: subosito/flutter-action@v1
-      - uses: erickzanardo/flutter-gh-pages@v6
       - run: sed -i 's#<base href="/">#<base href="/Moodplaner_x_Spotify/">#g' index.html
+      - uses: erickzanardo/flutter-gh-pages@v6
+      
