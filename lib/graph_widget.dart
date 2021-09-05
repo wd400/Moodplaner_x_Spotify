@@ -23,13 +23,12 @@ class OffsetXvalues extends ChangeNotifier {
   }
 }
 
-final offsetXvaluesProvider=ChangeNotifierProvider.autoDispose<OffsetXvalues>(
-      (context) => OffsetXvalues(value: 20),
+final offsetXvaluesProvider = ChangeNotifierProvider.autoDispose<OffsetXvalues>(
+  (context) => OffsetXvalues(value: 20),
 );
 
-
 class PaintSettings extends ChangeNotifier {
-  bool bargraph=false;
+  bool bargraph = false;
 
   PaintSettings();
 
@@ -37,16 +36,13 @@ class PaintSettings extends ChangeNotifier {
     this.bargraph = value;
     this.notifyListeners();
   }
-
 }
 
-final paintSettingsProvider=ChangeNotifierProvider.autoDispose<PaintSettings>(
-      (context) => PaintSettings(),
+final paintSettingsProvider = ChangeNotifierProvider.autoDispose<PaintSettings>(
+  (context) => PaintSettings(),
 );
 
-
-final double autoscrollMargin =30;
-
+final double autoscrollMargin = 30;
 
 const int deltaTimePix = 100;
 
@@ -95,13 +91,9 @@ class DrawableBoard extends StatefulWidget {
 class _DrawableBoardState extends State<DrawableBoard> {
   int offsetXvalue = 100;
 
-
-
   Timer? autoscroll;
 
   bool scrolling = false;
-
-
 
   ScrollController _scrollController = ScrollController();
   Size size = const Size(0, 0);
@@ -113,10 +105,9 @@ class _DrawableBoardState extends State<DrawableBoard> {
   double leap = 0;
 
   void updatepoints(double dx, double dy) {
-
     String? metricCode = context.read(currentMetricCodeProvider).metricCode;
 
-    if (metricCode==null){
+    if (metricCode == null) {
       return;
     }
     final int index = (max(0, min(dx, widget.constraints.maxWidth)) +
@@ -127,28 +118,29 @@ class _DrawableBoardState extends State<DrawableBoard> {
       //  print(dy);
       //  print(context.size?.height??0);
 
-    GraphData graph =  context.read(graphDataProvider);
+      GraphData graph = context.read(graphDataProvider);
 
-    double currentPos=max(upMargin,
-        min((widget.constraints.maxHeight) - bottomMargin, dy))/ widget.constraints.maxHeight;
+      double currentPos = max(upMargin,
+              min((widget.constraints.maxHeight) - bottomMargin, dy)) /
+          widget.constraints.maxHeight;
 
-
-    if (context.read(eraseModeProvider).eraser ){
-      if (graph.generator[metricCode]![index] != null &&  (currentPos-1+graph.generator[metricCode]![index]!).abs()<0.1) {
-        graph.updateMetric(metricCode, index,null);
-        if (graph.lastActivated==index){
-          graph.updateLastActivated();
+      if (context.read(eraseModeProvider).eraser) {
+        if (graph.generator[metricCode]![index] != null &&
+            (currentPos - 1 + graph.generator[metricCode]![index]!).abs() <
+                0.1) {
+          graph.updateMetric(metricCode, index, null);
+          if (graph.lastActivated == index) {
+            graph.updateLastActivated();
+          }
         }
+      } else {
+        graph.updateMetric(metricCode, index, 1 - currentPos);
       }
 
-    } else {
-      graph.updateMetric(metricCode, index,1-currentPos);
-    }
-
-
-    //  _streamer.add(_points);
+      //  _streamer.add(_points);
     }
   }
+
   void doautoscroll(double dx, double dy) async {
     toscroll = true;
     currentx = dx;
@@ -222,9 +214,9 @@ class _DrawableBoardState extends State<DrawableBoard> {
 
   void updategraphpan(double dx, double dy) {
     //   print("updade");
-if (context.read(currentMetricCodeProvider).metricCode==null) {
-  return;
-}
+    if (context.read(currentMetricCodeProvider).metricCode == null) {
+      return;
+    }
     double margin = dx + autoscrollMargin - widget.constraints.maxWidth;
 
     if (margin > 0) {
@@ -249,12 +241,8 @@ if (context.read(currentMetricCodeProvider).metricCode==null) {
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
-
     return GestureDetector(
         // onTapDown: (details) {
         //   dragging = true;
@@ -265,79 +253,75 @@ if (context.read(currentMetricCodeProvider).metricCode==null) {
         //   dragging = false;
         // },
         onPanStart: (details) {
-          dragging = true;
-          updategraphpan(details.localPosition.dx, details.localPosition.dy);
-        },
-        onPanUpdate: (details) {
-          updategraphpan(details.localPosition.dx, details.localPosition.dy);
-        },
-        onPanEnd: (details) {
-          dragging = false;
-        },
-        child: Consumer(
-            builder: (BuildContext context, T Function<T>(ProviderBase<Object?, T>) watch, Widget? child) {
-              offsetXvalue=watch(offsetXvaluesProvider).value;
+      dragging = true;
+      updategraphpan(details.localPosition.dx, details.localPosition.dy);
+    }, onPanUpdate: (details) {
+      updategraphpan(details.localPosition.dx, details.localPosition.dy);
+    }, onPanEnd: (details) {
+      dragging = false;
+    }, child: Consumer(builder: (BuildContext context,
+            T Function<T>(ProviderBase<Object?, T>) watch, Widget? child) {
+      offsetXvalue = watch(offsetXvaluesProvider).value;
 
-              if (_scrollController.hasClients) {
-                double newvalue = min(_scrollController.offset,max(0,size.width-widget.constraints.maxWidth))+random.nextDouble()/10;
-                _scrollController.jumpTo(newvalue);
-                //    _scrollController.jumpTo(_scrollController.offset+0.1);
-              }
+      if (_scrollController.hasClients) {
+        double newvalue = min(_scrollController.offset,
+                max(0, size.width - widget.constraints.maxWidth)) +
+            random.nextDouble() / 10;
+        _scrollController.jumpTo(newvalue);
+        //    _scrollController.jumpTo(_scrollController.offset+0.1);
+      }
 
-              return Scrollbar(
-            interactive: true,
-            showTrackOnHover: true,
-            controller: _scrollController,
-            isAlwaysShown: true,
-            child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                controller: _scrollController,
-                dragStartBehavior: DragStartBehavior.down,
-                physics: AlwaysScrollableScrollPhysics(),
-                child:  Consumer(
-                            builder: (BuildContext context, T Function<T>(ProviderBase<Object?, T>) watch, Widget? child) {
-                              print('dans CONSUMER');
-                              size = Size(max(widget.constraints.maxWidth,offsetXvalue * (context.read(graphDataProvider).lastActivated+1).toDouble()),0);
-                              print(size);
-                              print(_scrollController);
-                             // _scrollController.jumpTo(_scrollController.offset+random.nextDouble()/10);
+      return Scrollbar(
+          interactive: true,
+          showTrackOnHover: true,
+          controller: _scrollController,
+          isAlwaysShown: true,
+          child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              controller: _scrollController,
+              dragStartBehavior: DragStartBehavior.down,
+              physics: AlwaysScrollableScrollPhysics(),
+              child: Consumer(
+                builder: (BuildContext context,
+                    T Function<T>(ProviderBase<Object?, T>) watch,
+                    Widget? child) {
+                  print('dans CONSUMER');
+                  size = Size(
+                      max(
+                          widget.constraints.maxWidth,
+                          offsetXvalue *
+                              (context.read(graphDataProvider).lastActivated +
+                                      1)
+                                  .toDouble()),
+                      0);
+                  print(size);
+                  print(_scrollController);
+                  // _scrollController.jumpTo(_scrollController.offset+random.nextDouble()/10);
 
-
-                              return CustomPaint(
-                              size: size,
-                              painter: Painter(
-                                  graphData: watch(graphDataProvider).generator,
-                      height: widget.constraints.maxHeight,
-                      offsetXvalues: offsetXvalue,
-                              paintSettings:watch(paintSettingsProvider),
-                             metricId: watch(currentMetricCodeProvider).metricCode ,
-                              color:Theme.of(context).accentColor));
-                      },
-
-
-                          )));
-
-
-                          }));
-
-
-
-
+                  return CustomPaint(
+                      size: size,
+                      painter: Painter(
+                          graphData: watch(graphDataProvider).generator,
+                          height: widget.constraints.maxHeight,
+                          offsetXvalues: offsetXvalue,
+                          paintSettings: watch(paintSettingsProvider),
+                          metricId: watch(currentMetricCodeProvider).metricCode,
+                          color: Theme.of(context).accentColor));
+                },
+              )));
+    }));
   }
-
-
 }
-
-
 
 //color: Colors.black,
 class Painter extends CustomPainter {
   static final stroke = Paint()
     //  ..color = Colors.grey
-    ..style = PaintingStyle.stroke..strokeWidth = 2
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2
     ..strokeCap = StrokeCap.round;
 
-  final Map<String,List<double?>> graphData;
+  final Map<String, List<double?>> graphData;
   final double height;
   final int offsetXvalues;
 
@@ -356,83 +340,74 @@ class Painter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-   // if (graphData.isEmpty) return;
+    // if (graphData.isEmpty) return;
     // for (final point in points) canvas.drawCircle(point, radius, fill);
-    TextStyle dateStyle = TextStyle(fontSize: 15, fontWeight: FontWeight.bold,color:color );
+    TextStyle dateStyle =
+        TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: color);
     double textoffset = 0;
     double? point;
-  int i;
+    int i;
     String metric;
 
     String toprint;
 
-    if (metricId!=null){
-      toprint= METRICS[metricId!]!.bsup;
-      double textHeight=measureText(toprint, dateStyle).height;
+    if (metricId != null) {
+      toprint = METRICS[metricId!]!.bsup;
+      double textHeight = measureText(toprint, dateStyle).height;
 
-      drawText(
-          canvas,
-          Offset(0, upMargin+  textHeight),
-     toprint   ,
-          dateStyle );
+      drawText(canvas, Offset(0, upMargin + textHeight), toprint, dateStyle);
 
-      drawText(
-          canvas,
-          Offset(0,size.height - bottomMargin-textHeight),
-         METRICS[metricId!]!.binf   ,
-          dateStyle );
+      drawText(canvas, Offset(0, size.height - bottomMargin - textHeight),
+          METRICS[metricId!]!.binf, dateStyle);
     }
 
     if (paintSettings.bargraph) {
-
       for (metric in graphData.keys) {
-        print("METRIC "+metric.toString());
-        i=0;
+        print("METRIC " + metric.toString());
+        i = 0;
 
-
-        stroke.color=METRICS[metric]!.color;
+        stroke.color = METRICS[metric]!.color;
         for (point in graphData[metric]!) {
           if (point != null) {
             canvas.drawLine(
-                Offset(i * offsetXvalues.toDouble(), height * (1-point)),
+                Offset(i * offsetXvalues.toDouble(), height * (1 - point)),
                 Offset((i * offsetXvalues + offsetXvalues).toDouble(),
-                    height * (1-point)),
+                    height * (1 - point)),
                 stroke); //TODO;set color
           }
           i++;
         }
-
       }
     } else {
       textoffset = offsetXvalues.toDouble() / 2;
-     List<double?> points;
+      List<double?> points;
       for (metric in graphData.keys) {
-        print("METRIC2 "+metric.toString());
-        points=graphData[metric]!;
+        print("METRIC2 " + metric.toString());
+        points = graphData[metric]!;
 
-        stroke.color=METRICS[metric]!.color;
+        stroke.color = METRICS[metric]!.color;
 
         for (int i = 0; i < points.length - 1; i++) {
-          if (points[i]!=null) {
-            if (points[i + 1]!=null) {
+          if (points[i] != null) {
+            if (points[i + 1] != null) {
               canvas.drawLine(
                   Offset(i * offsetXvalues + offsetXvalues / 2,
-                      height * (1-points[i]!)),
+                      height * (1 - points[i]!)),
                   Offset((i + 1) * offsetXvalues + offsetXvalues / 2,
-                      height * (1-points[i + 1]!)),
+                      height * (1 - points[i + 1]!)),
                   stroke);
             }
             canvas.drawCircle(
                 Offset(i * offsetXvalues + offsetXvalues / 2,
-                    height * (1-points[i]!)),
+                    height * (1 - points[i]!)),
                 2,
                 stroke);
           }
         }
-        if (points.last !=null) {
+        if (points.last != null) {
           canvas.drawCircle(
               Offset(offsetXvalues * _nbOfXvalues - offsetXvalues / 2,
-                  height * (1-points.last!)),
+                  height * (1 - points.last!)),
               2,
               stroke);
         }
@@ -452,7 +427,7 @@ class Painter extends CustomPainter {
           Offset(textoffset + i.toDouble(),
               (size.height + upMargin - bottomMargin) / 2),
           _printDuration(minutes),
-          dateStyle );
+          dateStyle);
 
       minutes += deltaTime * nbTraits;
       //   canvas.drawParagraph("d", Offset(size.height-10, i.toDouble()));
@@ -463,7 +438,6 @@ class Painter extends CustomPainter {
   bool shouldRepaint(Painter oldDelegate) => true;
 }
 
-
 String _printDuration(Duration duration) {
   String twoDigits(int n) => n.toString().padLeft(2, "0");
   final String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
@@ -471,44 +445,40 @@ String _printDuration(Duration duration) {
   return "${twoDigits(duration.inHours)}:$twoDigitMinutes";
 }
 
-
-final graphDataProvider=ChangeNotifierProvider.autoDispose<GraphData>(
-      (context) => GraphData(),
+final graphDataProvider = ChangeNotifierProvider.autoDispose<GraphData>(
+  (context) => GraphData(),
 );
 
-
-class GraphData extends ChangeNotifier{
+class GraphData extends ChangeNotifier {
 //late Map<int,List<double?>> data;
- Map<String,List<double?>> generator={};
-  int lastActivated =0;
+  Map<String, List<double?>> generator = {};
+  int lastActivated = 0;
 
-  useCustomData(Map<String,List<double?>>  newData){
-
-    generator=newData;
-   // generator.measures= {};
+  useCustomData(Map<String, List<double?>> newData) {
+    generator = newData;
+    // generator.measures= {};
 
     updateLastActivated();
   }
 
-
   //dans le menu deroulant
-  addMetric(String id){
+  addMetric(String id) {
     generator.putIfAbsent(id, () => List.generate(_nbOfXvalues, (i) => null));
-}
+  }
 
- updateLastActivated(){
-   lastActivated=0;
-  for (String key in generator.keys.toSet()){
-    for (int i=_nbOfXvalues-1;i>=0;--i){
-      if (generator[key]![i]!=null){
-        lastActivated=max(lastActivated,i);
+  updateLastActivated() {
+    lastActivated = 0;
+    for (String key in generator.keys.toSet()) {
+      for (int i = _nbOfXvalues - 1; i >= 0; --i) {
+        if (generator[key]![i] != null) {
+          lastActivated = max(lastActivated, i);
+        }
       }
     }
-}
-   }
+  }
 
   //chips
-  delMetric(String id){
+  delMetric(String id) {
     print("requested");
     print(id);
     generator.remove(id);
@@ -517,20 +487,21 @@ class GraphData extends ChangeNotifier{
     updateLastActivated();
 
     notifyListeners();
-}
+  }
+
   //
-  updateMetric(String id, int idx, double? value){
-    generator[id]?[idx]=value;
-    if (idx>lastActivated){
-      lastActivated=idx;
+  updateMetric(String id, int idx, double? value) {
+    generator[id]?[idx] = value;
+    if (idx > lastActivated) {
+      lastActivated = idx;
     }
     notifyListeners();
-}
+  }
 
   updateMetricid(List<dynamic> newMetrics) {
     print("newMetrics");
     print(newMetrics);
-    print( generator.keys);
+    print(generator.keys);
 
     for (String metricCode in generator.keys.toSet()) {
       if (!newMetrics.contains(metricCode)) {
@@ -549,10 +520,10 @@ class GraphData extends ChangeNotifier{
   }
 }
 
-final currentMetricCodeProvider=ChangeNotifierProvider.autoDispose<CurrentMetricCode>(
-      (context) => CurrentMetricCode(),
+final currentMetricCodeProvider =
+    ChangeNotifierProvider.autoDispose<CurrentMetricCode>(
+  (context) => CurrentMetricCode(),
 );
-
 
 class CurrentMetricCode extends ChangeNotifier {
   String? metricCode;

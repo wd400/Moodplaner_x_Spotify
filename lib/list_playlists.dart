@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:html';
 import 'dart:io';
@@ -22,10 +21,9 @@ class CurrentPlaylistId extends ChangeNotifier {
   }
 }
 
-final currentPlaylistIdProvider=ChangeNotifierProvider<CurrentPlaylistId>(
-      (context) => CurrentPlaylistId(),
+final currentPlaylistIdProvider = ChangeNotifierProvider<CurrentPlaylistId>(
+  (context) => CurrentPlaylistId(),
 );
-
 
 List users = [];
 
@@ -33,8 +31,7 @@ class ListPlaylistState extends State<ListPlaylist> {
   static int page = 0;
   ScrollController _sc = new ScrollController();
   bool isLoading = false;
-  int selected=-1;
-
+  int selected = -1;
 
   @override
   void initState() {
@@ -51,16 +48,19 @@ class ListPlaylistState extends State<ListPlaylist> {
 
   @override
   void dispose() {
-
     super.dispose();
     _sc.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [Text("Source"), Flexible(child:Container(
+    return Column(children: [
+      Text("Source"),
+      Flexible(
+          child: Container(
         child: _buildList(),
-      ))]);
+      ))
+    ]);
   }
 
   Widget _buildList() {
@@ -72,21 +72,27 @@ class ListPlaylistState extends State<ListPlaylist> {
           return _buildProgressIndicator();
         } else {
           return new ListTile(
-            selected: index==selected,
+            selected: index == selected,
             title: Text((users[index]['name'])),
-            onTap: () { setState(() {
-              selected=index;
-              context.read(currentPlaylistIdProvider).update(value: users[index]['id']);
-
-            });},
+            onTap: () {
+              setState(() {
+                selected = index;
+                context
+                    .read(currentPlaylistIdProvider)
+                    .update(value: users[index]['id']);
+              });
+            },
           );
         }
       },
-      controller: _sc, separatorBuilder: (BuildContext context, int index) { return Divider(
-      indent: 40,
-      endIndent: 40,
-      color: Colors.black,
-    ); },
+      controller: _sc,
+      separatorBuilder: (BuildContext context, int index) {
+        return Divider(
+          indent: 40,
+          endIndent: 40,
+          color: Colors.black,
+        );
+      },
     );
   }
 
@@ -100,7 +106,8 @@ class ListPlaylistState extends State<ListPlaylist> {
           (50 * index).toString() +
           "&limit=50";
       final response = await http.get(Uri.parse(url), headers: {
-        HttpHeaders.authorizationHeader: 'Bearer ${context.read(tokenProvider).token}',
+        HttpHeaders.authorizationHeader:
+            'Bearer ${context.read(tokenProvider).token}',
         HttpHeaders.contentTypeHeader: ContentType.json.mimeType,
         HttpHeaders.acceptHeader: ContentType.json.mimeType
       });
@@ -112,15 +119,13 @@ class ListPlaylistState extends State<ListPlaylist> {
       for (int i = 0; i < jsonResponse['items'].length; i++) {
         users.add(jsonResponse['items'][i]);
       }
-isLoading=false;
-setState(() {
-  //        users.addAll(tList);
+      isLoading = false;
+      setState(() {
+        //        users.addAll(tList);
         if (jsonResponse['items'].length > 0) {
-
           page++;
         }
-        });
-
+      });
     }
   }
 
@@ -135,5 +140,4 @@ setState(() {
       ),
     );
   }
-
 }
