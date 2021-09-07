@@ -252,6 +252,7 @@ class _DrawableBoardState extends State<DrawableBoard> {
         //   updategraphpan(details.localPosition.dx, details.localPosition.dy);
         //   dragging = false;
         // },
+
         onPanStart: (details) {
       dragging = true;
       updategraphpan(details.localPosition.dx, details.localPosition.dy);

@@ -55,7 +55,8 @@ class ListPlaylistState extends State<ListPlaylist> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Text("Source"),
+      Text("Select musics to use",textAlign: TextAlign.center,style:TextStyle(
+          fontWeight: FontWeight.bold,),),
       Flexible(
           child: Container(
         child: _buildList(),

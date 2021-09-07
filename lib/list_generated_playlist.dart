@@ -45,7 +45,8 @@ class ListGeneratedPlaylist extends StatelessWidget {
     const title = 'Long List';
     print(items);
     return Column(children: [
-      Text('Playlist generated'),
+      Text('Playlist generated', style: TextStyle(fontWeight: FontWeight.bold)),
+
       Flexible(
           child: ListView.builder(
         itemCount: items.length,

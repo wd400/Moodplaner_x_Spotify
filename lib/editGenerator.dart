@@ -81,8 +81,9 @@ class _CollectionGeneratorState extends State<CollectionGenerator> {
                   //   Text(this.widget.generator.generatorName??"Unamed",textAlign: TextAlign.center,),
 
                   Text(
-            'Generator',
+            'Draw an emotional progression',
             textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18)
           )),
           Flexible(
               child: Row(
@@ -233,7 +234,8 @@ class _CollectionGeneratorState extends State<CollectionGenerator> {
                           },
                         ),
                       );
-                    }, child: Text('Select some metrics'),
+                    }, child: Text('Select metrics ',
+                      style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17)),
                   ),
 
                   Flexible(child: ChipWidget()),
@@ -246,7 +248,7 @@ class _CollectionGeneratorState extends State<CollectionGenerator> {
                             extractTrackMetrics(value)
                                 .then((value) => buildPlaylist(value)));
                       },
-                      icon: Icon(Icons.play_arrow))
+                      icon: Icon(Icons.play_arrow,size:40))
 //          ElevatedButton(onPressed: null,child: Icon(Icons.delete)),
 
                   /*    IconButton(
@@ -263,7 +265,7 @@ class _CollectionGeneratorState extends State<CollectionGenerator> {
                 ],
               )),
           //  Flexible(child:Container())
-        ]);
+       Text('To scroll, click on the graph and move your cursor horizontally while holding down\n\nTo start drawing, select a metric, click on the graph and move your cursor slightly vertically while holding down')]);
   }
 
   double L1(List<double?> genValues, double musicValue, double musicDuration,
