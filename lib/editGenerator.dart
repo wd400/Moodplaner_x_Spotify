@@ -38,6 +38,9 @@ class _CollectionGeneratorState extends State<CollectionGenerator> {
     List newData = [];
     List result = [];
     int offset = 0;
+    if (context.read(currentPlaylistIdProvider).value==null){
+      return Future.error(Error);
+    }
     while (true) {
       var url =
           "https://api.spotify.com/v1/playlists/${context.read(currentPlaylistIdProvider).value}/tracks?fields=items.track(name%2Cid%2Cartists.name)&limit=100&offset=$offset";
@@ -246,7 +249,7 @@ class _CollectionGeneratorState extends State<CollectionGenerator> {
                       onPressed: () {
                         downloadPlaylistData().then((value) =>
                             extractTrackMetrics(value)
-                                .then((value) => buildPlaylist(value)));
+                                .then((value) => buildPlaylist(value))).onError((error, stackTrace) => null);
                       },
                       icon: Icon(Icons.play_arrow,size:40))
 //          ElevatedButton(onPressed: null,child: Icon(Icons.delete)),

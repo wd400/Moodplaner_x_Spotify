@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -98,9 +99,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 context.read(generatedPlaylistProvider).value).then((value) {
 if (value) {
 
-  saved.show(context);
+
+  ScaffoldMessenger.of(context).showSnackBar(saved);
 } else {
-  failed.show(context);
+  ScaffoldMessenger.of(context).showSnackBar(failed);
 }
 
             });

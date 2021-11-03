@@ -14,7 +14,7 @@ class ListPlaylist extends StatefulWidget {
 }
 
 class CurrentPlaylistId extends ChangeNotifier {
-  late String value;
+  String? value;
   void update({required String value}) {
     this.value = value;
     this.notifyListeners();
