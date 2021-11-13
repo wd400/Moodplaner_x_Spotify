@@ -9,6 +9,6 @@ Prototype for reordering music on Spotify using a drawn emotional progression
 ## Getting Started
 
 
-1- select the music you want to use
-2- draw an emotional progression
-3- generate a playlist and save it to Spotify
+1- select the music you want to use 
+2- draw an emotional progression 
+3- generate a playlist and save it to Spotify 
