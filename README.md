@@ -4,7 +4,7 @@ Prototype for reordering music on Spotify using a drawn emotional progression
 # [Test it online!](https://wd400.github.io/Moodplaner_x_Spotify/)
 
 
-![](demo.mp4)
+![](demo.gif)
 
 ## Getting Started
 
